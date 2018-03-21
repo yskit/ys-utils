@@ -1,11 +1,11 @@
 {
   "name": "ys-utils",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "ys support methods",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:cevio/ys-utils.git"
+    "url": "git@github.com:yskit/ys-utils.git"
   },
   "dependencies": {
     "utility": "^1.13.1"
