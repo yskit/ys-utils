@@ -1,6 +1,6 @@
 {
   "name": "ys-utils",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "ys support methods",
   "main": "index.js",
   "repository": {

@@ -91,7 +91,8 @@ function installPlugin(configs, env, agent, baseDir) {
     if (fs.existsSync(exportsPath)) {
       tree[plugin] = {
         dependencies: modal.plugin.dependencies || [],
-        exports: load(exportsPath)
+        exports: load(exportsPath),
+        dir: path.dirname(exportsPath)
       }
       if (config.dependencies) {
         if (!Array.isArray(config.dependencies)) {
