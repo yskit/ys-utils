@@ -57,7 +57,7 @@ function installPlugin(configs, env, agent, baseDir) {
     if (!Array.isArray(config.agent)) config.agent = [config.agent];
     if (!config.enable) continue;
     if (env && config.env.length && config.env.indexOf(env) === -1) continue;
-    if (agent && config.agent.length && config.agent.indexOf(agent) === -1) continue;
+    if (!config.agent.length || (agent && config.agent.length && config.agent.indexOf(agent) === -1)) continue;
 
     const pluginPackageName = config.package;
     const pluginPathName = config.path;
@@ -87,11 +87,20 @@ function installPlugin(configs, env, agent, baseDir) {
     if (modal.plugin.name !== plugin) {
       throw new Error(`plugin of ${plugin}'s package.json which name is not matched in ${pkgPath}`);
     }
+
     if (fs.existsSync(exportsPath)) {
       tree[plugin] = {
         dependencies: modal.plugin.dependencies || [],
         exports: load(exportsPath)
       }
+      if (config.dependencies) {
+        if (!Array.isArray(config.dependencies)) {
+          config.dependencies = [config.dependencies];
+        }
+      } else {
+        config.dependencies = [];
+      }
+      tree[plugin].dependencies = tree[plugin].dependencies.concat(config.dependencies);
     }
   }
   return sortDependencies(tree);
@@ -103,7 +112,6 @@ function sortDependencies(tree) {
   let j = s.length;
   while (j--) {
     const obj = tree[s[j]];
-
     Object.defineProperty(obj, 'deep', {
       get() {
         if (!obj.dependencies.length) return 0;
