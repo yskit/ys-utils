@@ -57,7 +57,10 @@ function installPlugin(configs, env, agent, baseDir) {
     if (!Array.isArray(config.agent)) config.agent = [config.agent];
     if (!config.enable) continue;
     if (env && config.env.length && config.env.indexOf(env) === -1) continue;
-    if (!config.agent.length || (agent && config.agent.length && config.agent.indexOf(agent) === -1)) continue;
+    if (agent) {
+      if (!config.agent.length) continue;
+      if (config.agent.length && config.agent.indexOf(agent) === -1) continue;
+    }
 
     const pluginPackageName = config.package;
     const pluginPathName = config.path;
