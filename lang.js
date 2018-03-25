@@ -45,7 +45,7 @@ async function loadFileWorker(file, object) {
   }
 }
 
-function installPlugin(configs, env, agent, baseDir) {
+function installPlugin(configs, env, agent, baseDir, framework) {
   const tree = {};
   const file = agent ? 'agent.js' : 'app.js';
   for (const plugin in configs) {
@@ -89,6 +89,12 @@ function installPlugin(configs, env, agent, baseDir) {
     }
     if (modal.plugin.name !== plugin) {
       throw new Error(`plugin of ${plugin}'s package.json which name is not matched in ${pkgPath}`);
+    }
+    if (!modal.plugin.framework) modal.plugin.framework = [];
+    if (!Array.isArray(modal.plugin.framework)) modal.plugin.framework = [modal.plugin.framework];
+    if (!modal.plugin.framework.length) {
+      const index = modal.plugin.framework.indexOf(framework);
+      if (index === -1) continue;
     }
 
     if (fs.existsSync(exportsPath)) {
