@@ -91,9 +91,13 @@ function installPlugin(configs, env, agent, baseDir, framework) {
       throw new Error(`plugin of ${plugin}'s package.json which name is not matched in ${pkgPath}`);
     }
     
-    framework = framework.indexOf('ys-fw-') === -1 ? 'ys-fw-' + framework : framework;
     if (!modal.plugin.framework) modal.plugin.framework = [];
     if (!Array.isArray(modal.plugin.framework)) modal.plugin.framework = [modal.plugin.framework];
+    modal.plugin.framework = modal.plugin.framework.map(
+      fw => fw.indexOf('ys-fw-') === -1 
+        ? 'ys-fw-' + fw 
+        : fw
+    )
     if (modal.plugin.framework.length) {
       const index = modal.plugin.framework.indexOf(framework);
       if (index === -1) continue;
