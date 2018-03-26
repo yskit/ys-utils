@@ -92,7 +92,7 @@ function installPlugin(configs, env, agent, baseDir, framework) {
     }
     if (!modal.plugin.framework) modal.plugin.framework = [];
     if (!Array.isArray(modal.plugin.framework)) modal.plugin.framework = [modal.plugin.framework];
-    if (!modal.plugin.framework.length) {
+    if (modal.plugin.framework.length) {
       const index = modal.plugin.framework.indexOf(framework);
       if (index === -1) continue;
     }
