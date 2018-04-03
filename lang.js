@@ -131,7 +131,7 @@ function sortDependencies(tree) {
     Object.defineProperty(obj, 'deep', {
       get() {
         if (!obj.dependencies.length) return 0;
-        return Math.max(...obj.dependencies.map(d => tree[d].deep)) + 1;
+        return Math.max(...obj.dependencies.map(d => tree[d] ? tree[d].deep : 0)) + 1;
       }
     });
   }
