@@ -103,21 +103,21 @@ function installPlugin(configs, env, agent, baseDir, framework) {
       if (index === -1) continue;
     }
 
-    if (fs.existsSync(exportsPath)) {
-      tree[plugin] = {
-        dependencies: modal.plugin.dependencies || [],
-        exports: load(exportsPath),
-        dir: path.dirname(exportsPath)
-      }
-      if (config.dependencies) {
-        if (!Array.isArray(config.dependencies)) {
-          config.dependencies = [config.dependencies];
-        }
-      } else {
-        config.dependencies = [];
-      }
-      tree[plugin].dependencies = tree[plugin].dependencies.concat(config.dependencies);
+    const exportsFn = fs.existsSync(exportsPath) ? load(exportsPath) : function noop() {};
+    tree[plugin] = {
+      dependencies: modal.plugin.dependencies || [],
+      exports: exportsFn,
+      dir: path.dirname(exportsPath)
     }
+
+    if (config.dependencies) {
+      if (!Array.isArray(config.dependencies)) {
+        config.dependencies = [config.dependencies];
+      }
+    } else {
+      config.dependencies = [];
+    }
+    tree[plugin].dependencies = tree[plugin].dependencies.concat(config.dependencies);
   }
   return sortDependencies(tree);
 }
