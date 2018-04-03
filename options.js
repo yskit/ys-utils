@@ -15,13 +15,13 @@ const { getFrameworkPath } = require('./framework');
  * @param   - plugin_file 插件列表文件地址 [此选项由系统自动生成]
  * @param   - plugin_config_file 插件配置文件地址 [此选项由系统自动生成]
  */
-module.exports = async (options, config_file, env) => {
+module.exports = async (options, config_file, env, argvs) => {
   options = Object.assign({
     baseDir: process.cwd(),
     max: 0,
     framework: null,
     plugin_file: null
-  }, options);
+  }, options, argvs);
 
   options.config_file = config_file;
   options.env = env;
