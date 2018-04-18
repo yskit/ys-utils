@@ -39,6 +39,12 @@ module.exports = async (options, config_file, env, argvs) => {
     throw new Error('framework miss `Agent` class module.');
   }
 
+  const frameWorkOptionsPath = path.resolve(options.framework, `config/options.${env}.js`);
+  if (fs.existsSync(frameWorkOptionsPath)) {
+    const frameworkOptions = load(frameWorkOptionsPath);
+    options = Object.assign({}, frameworkOptions, options);
+  }
+
   if (!options.agents) options.agents = ['agent'];
   if (typeof options.agents === 'string') {
     options.agents = [options.agents];
@@ -50,9 +56,19 @@ module.exports = async (options, config_file, env, argvs) => {
     }
   });
 
+  const frameworkPluginsPath = path.resolve(options.framework, 'config/plugin.js');
+  const frameworkPluginConfigsPath = path.resolve(options.framework, `config/plugin.${env}.js`);
+
   options.worker_file = path.resolve(options.baseDir, 'app.js');
-  options.plugin_file = path.resolve(options.config_file, 'plugin.js');
-  options.plugin_config_file = path.resolve(options.config_file, `plugin.${options.env}.js`);
+  options.plugin_file = [path.resolve(options.config_file, 'plugin.js')];
+  options.plugin_config_file = [path.resolve(options.config_file, `plugin.${options.env}.js`)];
+
+  if (fs.existsSync(frameworkPluginsPath)) {
+    options.plugin_file.push(frameworkPluginsPath);
+  }
+  if (fs.existsSync(frameworkPluginConfigsPath)) {
+    options.plugin_config_file.push(frameworkPluginConfigsPath);
+  }
 
   const frameworkDetecter = options.framework + '/detect.js';
   if (fs.existsSync(frameworkDetecter)) {
