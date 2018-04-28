@@ -49,6 +49,7 @@ async function loadFileWorker(file, object) {
 function installPlugin(configs, env, agent, baseDir, framework) {
   const tree = {};
   const file = agent ? 'agent.js' : 'app.js';
+  const configKeys = Object.keys(configs);
   for (const plugin in configs) {
     const config = configs[plugin];
     if (config.enable === undefined) config.enable = true;
@@ -120,17 +121,17 @@ function installPlugin(configs, env, agent, baseDir, framework) {
     }
     tree[plugin].dependencies = tree[plugin].dependencies.concat(config.dependencies);
   }
-  return sortDependencies(tree);
+  return sortDependencies(tree, configKeys);
 }
 
-function sortDependencies(tree) {
+function sortDependencies(tree, configKeys) {
   const s = Object.keys(tree);
   const m = [];
   let j = s.length;
   while (j--) {
     const obj = tree[s[j]];
     if (obj.dependencies.length) {
-      const res = intersect(obj.dependencies, s);
+      const res = intersect(obj.dependencies, configKeys);
       if (res.removes.length) {
         throw new Error(`模块[${s[j]}]依赖模块不存在：${res.removes.join(',')}`);
       }
