@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { load } = require('./file');
 const { assertAndReturn } = require('./framework');
+const intersect = require('@evio/intersect');
 
 exports.checkPortCanUse = checkPortCanUse;
 exports.loadFileWorker = loadFileWorker;
@@ -128,6 +129,12 @@ function sortDependencies(tree) {
   let j = s.length;
   while (j--) {
     const obj = tree[s[j]];
+    if (obj.dependencies.length) {
+      const res = intersect(obj.dependencies, s);
+      if (res.removes.length) {
+        throw new Error(`模块[${s[j]}]依赖模块不存在：${res.removes.join(',')}`);
+      }
+    }
     Object.defineProperty(obj, 'deep', {
       get() {
         if (!obj.dependencies.length) return 0;

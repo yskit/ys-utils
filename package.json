@@ -1,6 +1,6 @@
 {
   "name": "ys-utils",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "ys support methods",
   "main": "index.js",
   "repository": {
@@ -8,6 +8,7 @@
     "url": "git@github.com:yskit/ys-utils.git"
   },
   "dependencies": {
+    "@evio/intersect": "^1.0.0",
     "utility": "^1.13.1"
   }
 }
