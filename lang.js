@@ -7,6 +7,7 @@ const intersect = require('@evio/intersect');
 exports.checkPortCanUse = checkPortCanUse;
 exports.loadFileWorker = loadFileWorker;
 exports.installPlugin = installPlugin;
+exports.mergeConfigs = mergeConfigs;
 
 exports.delay = delay;
 
@@ -99,7 +100,7 @@ function installPlugin(configs, env, agent, baseDir, framework) {
       fw => fw.indexOf('ys-fw-') === -1 
         ? 'ys-fw-' + fw 
         : fw
-    )
+    );
     if (modal.plugin.framework.length) {
       const index = modal.plugin.framework.indexOf(framework);
       if (index === -1) continue;
@@ -110,7 +111,7 @@ function installPlugin(configs, env, agent, baseDir, framework) {
       dependencies: modal.plugin.dependencies || [],
       exports: exportsFn,
       dir: path.dirname(exportsPath)
-    }
+    };
 
     if (config.dependencies) {
       if (!Array.isArray(config.dependencies)) {
@@ -149,4 +150,13 @@ function sortDependencies(tree, configKeys) {
     m.push(tree[i]);
   }
   return m.sort((a, b) => a.deep - b.deep);
+}
+
+function mergeConfigs(array) {
+  return Object.assign({}, ...array.map(arr => {
+    if (!fs.existsSync(arr)) {
+      return {};
+    }
+    return load(arr);
+  }));
 }
